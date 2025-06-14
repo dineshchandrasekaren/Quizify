@@ -39,10 +39,12 @@ export const QuizProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     let clear: NodeJS.Timeout;
+    clear = setInterval(() => setTime((t) => t - 1), 1000);
     if (time === 0) {
       onNext();
+    } else if (isFinished) {
+      clearInterval(clear);
     }
-    clear = setInterval(() => setTime((t) => t - 1), 1000);
     return () => clearInterval(clear);
   }, [time]);
   useEffect(() => {
