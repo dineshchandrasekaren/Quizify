@@ -21,6 +21,7 @@ type QuizContext = {
   isFinished: boolean;
   score: number;
   bestScore: number;
+  time: number;
   //   reset: () => void;
 };
 
@@ -34,6 +35,16 @@ export const QuizProvider = ({ children }: PropsWithChildren) => {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const isFinished = currentQuestionIndex >= questions.length;
+  const [time, setTime] = useState(6);
+
+  useEffect(() => {
+    let clear: NodeJS.Timeout;
+    if (time === 0) {
+      onNext();
+    }
+    clear = setInterval(() => setTime((t) => t - 1), 1000);
+    return () => clearInterval(clear);
+  }, [time]);
   useEffect(() => {
     saveBestScore();
   }, []);
@@ -56,6 +67,7 @@ export const QuizProvider = ({ children }: PropsWithChildren) => {
   };
 
   const onNext = () => {
+    setTime(6);
     if (isFinished) {
       setScore(0);
       setCurrentQuestionIndex(0);
@@ -85,6 +97,7 @@ export const QuizProvider = ({ children }: PropsWithChildren) => {
         isFinished,
         score,
         bestScore,
+        time,
         // reset,
       }}
     >

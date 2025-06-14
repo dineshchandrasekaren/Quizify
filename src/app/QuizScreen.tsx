@@ -15,6 +15,7 @@ const QuizScreen = () => {
     currentQuestion,
     score,
     bestScore,
+    time,
   } = useQuizContext();
   return (
     <SafeAreaProvider>
@@ -42,7 +43,10 @@ const QuizScreen = () => {
             </Text>
           )}
           {!isFinished ? (
-            <QuestionCard question={currentQuestion} />
+            <>
+              <QuestionCard question={currentQuestion} />
+              <Text>{time}</Text>
+            </>
           ) : (
             <Card title="Result">
               <Text>Your Score: {score}</Text>
