@@ -1,10 +1,11 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "../components/CustomButton";
 import QuestionCard from "../components/QuestionCard";
 
 import Card from "../components/Card";
 import { useQuizContext } from "../providers/QuizProvider";
+import LottieView from "lottie-react-native";
 
 const QuizScreen = () => {
   const {
@@ -48,10 +49,18 @@ const QuizScreen = () => {
               <Text>{time}</Text>
             </>
           ) : (
-            <Card title="Result">
-              <Text>Your Score: {score}</Text>
-              <Text>HighScore: {bestScore}</Text>
-            </Card>
+            <>
+              <LottieView
+                style={StyleSheet.absoluteFill}
+                source={require("../../assets/party.json")}
+                autoPlay
+                loop={false}
+              />
+              <Card title="Result">
+                <Text>Your Score: {score}</Text>
+                <Text>HighScore: {bestScore}</Text>
+              </Card>
+            </>
           )}
 
           <CustomButton
