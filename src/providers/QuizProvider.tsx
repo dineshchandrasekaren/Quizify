@@ -10,6 +10,7 @@ import {
 import { Question } from "../types";
 import questions from "../data/questions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTimer } from "../hooks/useTimer";
 
 type QuizContext = {
   currentQuestionIndex: number;
@@ -35,21 +36,28 @@ export const QuizProvider = ({ children }: PropsWithChildren) => {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const isFinished = currentQuestionIndex >= questions.length;
-  const [time, setTime] = useState(6);
+  const { time, startTimer, clearTimer } = useTimer(5);
 
-  useEffect(() => {
-    let clear: NodeJS.Timeout;
-    clear = setInterval(() => setTime((t) => t - 1), 1000);
-    if (time === 0) {
-      onNext();
-    } else if (isFinished) {
-      clearInterval(clear);
-    }
-    return () => clearInterval(clear);
-  }, [time]);
   useEffect(() => {
     saveBestScore();
   }, []);
+
+  useEffect(() => {
+    startTimer();
+
+    return () => {
+      clearTimer();
+    };
+  }, [currentQuestion]);
+
+  useEffect(() => {
+    if (time <= 0) {
+      if (isFinished) return clearTimer();
+      clearTimer();
+      onNext();
+    }
+  }, [time]);
+
   useEffect(() => {
     if (isFinished === true && score > bestScore) {
       setBestScore(score);
@@ -69,11 +77,10 @@ export const QuizProvider = ({ children }: PropsWithChildren) => {
   };
 
   const onNext = () => {
-    setTime(6);
+    clearTimer();
     if (isFinished) {
       setScore(0);
       setCurrentQuestionIndex(0);
-      console.log("Dfdsfsfsfd");
 
       return;
     }
