@@ -9,13 +9,13 @@ import { useQuizContext } from "../providers/QuizProvider";
 const QuizScreen = () => {
   const {
     isFinished,
-    currentQuestionIndex,
+    currentIndex,
     totalQuestion,
-    onNext,
     currentQuestion,
     score,
     bestScore,
     time,
+    dispatch,
   } = useQuizContext();
   return (
     <SafeAreaProvider>
@@ -33,7 +33,7 @@ const QuizScreen = () => {
             <Text
               style={{ color: "#a262f5", fontSize: 18, fontWeight: "bold" }}
             >
-              Question {currentQuestionIndex + 1}/{totalQuestion}
+              Question {currentIndex + 1}/{totalQuestion}
             </Text>
           ) : (
             <Text
@@ -56,7 +56,13 @@ const QuizScreen = () => {
 
           <CustomButton
             name={isFinished ? "Restart" : "Next"}
-            onPress={onNext}
+            onPress={() => {
+              dispatch(
+                isFinished
+                  ? { type: "quiz/reset", payload: {} }
+                  : { type: "question/nextIndex", payload: {} }
+              );
+            }}
           />
         </View>
       </SafeAreaView>
